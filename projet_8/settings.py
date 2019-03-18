@@ -39,6 +39,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'projet_8.urls'
 
+LOGIN_REDIRECT_URL = '/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

@@ -1,15 +1,14 @@
 from django.urls import path
-from django.contrib.auth.models import auth
+from django.contrib.auth import views as auth_views
 from user import views
+from .forms import LoginForm
 
+app_name = 'user'
 urlpatterns = [
     path('signup/',
          views.signup,
          name='signup'),
-    path('account_activation_sent/',
-         views.account_activation_sent,
-         name='account_activation_sent'),
-    path('activate/<uidb64>/<token>',
-         views.activate,
-         name='activate')
+    path('login/', auth_views.LoginView.as_view(
+        template_name='user/login.html',
+        authentication_form=LoginForm), name='login'),
 ]
