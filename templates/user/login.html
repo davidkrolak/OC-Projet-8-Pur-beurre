@@ -5,29 +5,28 @@
 {% endblock %}
 
 {% block content %}
-  <h2>Se connecter</h2>
+  <section class="page-section h-auto">
+    <div class="container">
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}"/>
+
+        {% for field in form %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text text-muted"><small>{{ field.help_text }}</small></div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <button class="btn btn-primary" type="submit">Se connecter</button>
+        <a href="{% url 'user:signup' %}">Nouveau ici ? S'enregistrer</a>
+      </form>
+    </div>
+  </section>
   {% if form.errors %}
     <p>Votre nom d'utilisateur et le mot de passe ne correspondent pas</p>
   {% endif %}
 
-  <form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{{ next }}"/>
-    {% for field in form %}
-      <div>
-        {{ field.label_tag }}<br>
-        {{ field }}<br>
-        {% for error in field.errors %}
-          <p>{{ error }}</p>
-        {% endfor %}
-      {% if field.help_text %}
-        <p>
-          <small>{{ field.help_text }}</small>
-        </p>
-      {% endif %}
-      </div>
-    {% endfor %}
-    <button type="submit">Se connecter</button>
-    <a href="{% url 'user:signup' %}">Nouveau ici ? S'enregistrer</a>
-  </form>
 {% endblock %}

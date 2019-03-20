@@ -1,0 +1,13 @@
+/*Base*/
+#header_block {
+    background-color: #0e171d;
+    border-bottom-width: 8px;
+    border-bottom-color: white;
+}
+/*Account template*/
+#user_account_section_block_top {
+    background-image: url("../images/header.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}

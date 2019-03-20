@@ -4,6 +4,22 @@
 {% endblock %}
 
 {% block content %}
-  {{ user.first_name }}
-  {{ user.email }}
+  <section id="user_account_section_block_top" class="page-section h-25">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <h2 class="text-white">{{ user.first_name }}</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="page-section h-auto">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <h2 class="text-black-50">{{ user.email }}</h2>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
