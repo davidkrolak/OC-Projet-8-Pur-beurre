@@ -1,9 +1,9 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.views import View
 from django.utils.decorators import method_decorator
+from django.views import View
+
 from .forms import SignUpForm
 
 
@@ -29,10 +29,11 @@ class SignUpView(View):
             return render(request, self.template_name, {'form': form})
 
 
-
 class AccountView(View):
+    template_name = 'user/account.html'
 
     @method_decorator(login_required)
     def get(self, request):
         user = request.user
-        return HttpResponse(str(user.username))
+        context_dict = {'user': user}
+        return render(request, self.template_name, context_dict)
