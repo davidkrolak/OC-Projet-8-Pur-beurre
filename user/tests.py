@@ -6,49 +6,92 @@ from django.contrib.auth.models import User
 class SignupViewTest(TestCase):
     """"""
 
+    def setUp(self):
+        self.form_data = {'username': 'test_form',
+                          'last_name': 'form',
+                          'first_name': 'test',
+                          'email': 'test_form@mail.com',
+                          'password1': 'iamnotsecure12',
+                          'password2': 'iamnotsecure12'}
+
     def test_get_request_correct_html(self):
         response = self.client.get(reverse('user:signup'))
         html = response.content.decode('utf8')
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(html.startswith('<!DOCTYPE html>'))
-        self.assertIn('<h2>Créer un compte</h2>', html)
+        self.assertInHTML('<h2 class="text-center">Créer un compte</h2>', html)
         self.assertTrue(html.endswith('</html>'))
 
     def test_post_request_redirection_correct_form(self):
-        form_data = {'username': 'test_form',
-                     'last_name': 'form',
-                     'first_name': 'test',
-                     'email': 'test_form@mail.com',
-                     'password1': 'iamnotsecure12',
-                     'password2': 'iamnotsecure12'}
-        response = self.client.post(reverse('user:signup'), form_data)
+        response = self.client.post(reverse('user:signup'), self.form_data)
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/user/account/')
 
     def test_post_request_redirection_wrong_form(self):
-        form_data = {'username': 'test_form',
-                     'last_name': 'form',
-                     'first_name': 'test',
-                     'email': 'test_form@mail.com',
-                     'password1': 'iamnotsecure12',
-                     'password2': 'iamwrong'}
+        form_data = self.form_data
+        form_data['password2'] = 'iamwrong'
         response = self.client.post(reverse('user:signup'), form_data)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.wsgi_request.path, '/user/signup/')
 
 
+class ConnectionViewTest(TestCase):
+    """"""
+
+    def setUp(self):
+        User.objects.create_user(username='test',
+                                 password='test1234',
+                                 email='test@mail.com',
+                                 first_name='test_first_name')
+        self.credentials = {'username': 'test',
+                            'password': 'test1234'}
+
+    def test_user_login(self):
+        response = self.client.post(reverse('user:login'), self.credentials)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.wsgi_request.user.username, 'test')
+
+
+class DisconnectionViewTest(TestCase):
+    """"""
+
+    def setUp(self):
+        User.objects.create_user(username='test',
+                                 password='test1234',
+                                 email='test@mail.com',
+                                 first_name='test_first_name')
+        self.client.login(username='test', password='test1234')
+
+    def test_user_logout(self):
+        response = self.client.get(reverse('user:logout'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.wsgi_request.user.username, '')
+
+
 class AccountViewTest(TestCase):
     """"""
 
-    def test_client_login(self):
+    def setUp(self):
         User.objects.create_user(username='test',
                                  password='test1234',
-                                 email='test@mail.com')
-        self.client.login(username='test', password='test1234')
+                                 email='test@mail.com',
+                                 first_name='test_first_name')
 
+    def test_display_user_info(self):
+        self.client.login(username='test', password='test1234')
         response = self.client.get(reverse('user:account'))
+        html = response.content.decode('utf8')
+
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content.decode('utf8'), 'test')
+        self.assertEqual(response.wsgi_request.user.username, 'test')
+        self.assertInHTML('<h2 class="text-black-50">test@mail.com</h2>', html)
+        self.assertInHTML('<h2 class="text-white">test_first_name</h2>', html)
+
+    def test_redirection_if_not_logged_in(self):
+        response = self.client.get(reverse('user:account'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual('/user/login/?next=/user/account/', response.url)
