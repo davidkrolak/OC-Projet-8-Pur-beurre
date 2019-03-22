@@ -54,6 +54,14 @@ class ConnectionViewTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.wsgi_request.user.username, 'test')
 
+    def test_login_wrong_credentials(self):
+        credentials = self.credentials
+        credentials['password'] = 'iamwrong'
+        response = self.client.post(reverse('user:login'), credentials)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.wsgi_request.user.username, '')
+
 
 class DisconnectionViewTest(TestCase):
     """"""
