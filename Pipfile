@@ -9,6 +9,7 @@ verify_ssl = true
 django = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
+selenium = "*"
 
 [requires]
 python_version = "3.7"
