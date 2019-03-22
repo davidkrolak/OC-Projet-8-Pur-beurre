@@ -5,7 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -39,6 +39,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'projet_8.urls'
 
 LOGIN_REDIRECT_URL = '/'
+
+LOGIN_URL = '/user/login/'
 
 TEMPLATES = [
     {
@@ -103,3 +105,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [STATIC_DIR, ]

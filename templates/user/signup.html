@@ -1,14 +1,29 @@
 {% extends 'base.html' %}
 
 {% block title %}
-   - Créer un compte
+  - Créer un compte
 {% endblock %}
 
 {% block content %}
-<h2>Créer un compte</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Créer mon compte</button>
-</form>
+  <section class="page-section h-auto">
+    <div class="container">
+      <h2 class="text-center">Créer un compte</h2>
+      <hr class="divider my-4">
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text text-muted">
+                <small>{{ field.help_text }}</small>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <button class="btn btn-primary" type="submit">Créer mon compte</button>
+      </form>
+    </div>
+  </section>
 {% endblock %}

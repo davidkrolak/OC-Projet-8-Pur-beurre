@@ -1,10 +1,11 @@
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
 
 
 class SignUpView(View):
@@ -27,6 +28,15 @@ class SignUpView(View):
         elif not form.is_valid():
             form = self.form()
             return render(request, self.template_name, {'form': form})
+
+
+class ConnectionView(LoginView):
+    template_name = 'user/login.html'
+    authentication_form = LoginForm
+
+
+class DisconnectionView(LogoutView):
+    template_name = 'user/logout.html'
 
 
 class AccountView(View):
