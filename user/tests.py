@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
+from .forms import SignUpForm, LoginForm
 
 
 class SignupViewTest(TestCase):
@@ -103,3 +104,31 @@ class AccountViewTest(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual('/user/login/?next=/user/account/', response.url)
+
+
+class SignupFormTest(TestCase):
+
+    def test_class_attributes(self):
+        form = SignUpForm()
+        self.assertIn('class="form-control"', form.as_p())
+
+    def test_form_inputs(self):
+        form = SignUpForm()
+        self.assertIn('id="id_username"', form.as_p())
+        self.assertIn('id="id_first_name"', form.as_p())
+        self.assertIn('id="id_last_name"', form.as_p())
+        self.assertIn('id="id_email"', form.as_p())
+        self.assertIn('id="id_password1"', form.as_p())
+        self.assertIn('id="id_password2"', form.as_p())
+
+
+class LoginFormTest(TestCase):
+
+    def test_class_attributes(self):
+        form = LoginForm()
+        self.assertIn('class="form-control"', form.as_p())
+
+    def test_form_inputs(self):
+        form = LoginForm()
+        self.assertIn('id="id_username"', form.as_p())
+        self.assertIn('id="id_password"', form.as_p())
