@@ -11,7 +11,7 @@ class PopulateDatabaseScriptTests(TestCase):
     """"""
 
     @patch.object(requests, 'get')
-    def test_request_categories_function_return_dict(self, mock_requests_get):
+    def test_api_categories_request_return_dict(self, mock_requests_get):
         """"""
         mock_requests_get.return_value = requests.Response()
         mock_requests_get.return_value._content = b'{"test":"test"}'
@@ -19,32 +19,22 @@ class PopulateDatabaseScriptTests(TestCase):
 
         self.assertTrue(type(request_dict) is dict, 'yes')
 
-    def test_right_amount_of_cats_in_db_lower_than_count(self):
-        request_dict = {"tags": [{"name": "test1",
-                                  "url": "urltest1",
+    def test_save_categories_into_db_right_amount(self):
+        request_dict = {"tags": [{"name": "testone",
+                                  "url": "http://urltest1.com",
                                   "products": "5"},
-                                 {"name": "test2",
-                                  "url": "urltest2",
+                                 {"name": "testtwo",
+                                  "url": "http://urltest2.com",
                                   "products": "5"}],
                         "count": 2}
-        populate_database.save_categories_into_db(request_dict, 1)
+        populate_database.save_categories_into_db(request_dict)
 
-        self.assertEqual(Categories.objects.count(), 1)
-
-    def test_right_amount_of_cats_in_db_higher_than_count(self):
-        request_dict = {"tags": [{"name": "test1",
-                                  "url": "urltest1",
-                                  "products": "5"},
-                                 {"name": "test2",
-                                  "url": "urltest2",
-                                  "products": "5"}],
-                        "count": 2}
-        populate_database.save_categories_into_db(request_dict, 5)
-
-        self.assertEqual(Categories.objects.count(), 2)
-
-    def test_api_food_request(self):
+    @patch.object(requests, 'get')
+    def test_api_food_request_return_dict(self, mock_requests_get):
         """"""
+        mock_requests_get.return_value = requests.Response()
+        mock_requests_get.return_value._content = b'{"test":"test"}'
+
         category = Categories()
         category.name = "Aliments et boissons à base de végétaux"
         category.url = "https://fr.openfoodfacts.org/categorie/aliments-et-boissons-a-base-de-vegetaux"
@@ -52,5 +42,24 @@ class PopulateDatabaseScriptTests(TestCase):
         category.clean()
         category.save()
 
-        populate_database.api_food_request(category.url,
-                                           category.product_count)
+        request_dict = populate_database.api_food_request(category)
+
+        self.assertTrue(type(request_dict), dict)
+
+    def test_save_food_into_db(self):
+        """"""
+        request_dict = {"products": [
+            {"product_name": "testone",
+             "brands": "brandsone",
+             "nutrition_grades": "A",
+             "url": "http://iamurlone.com",
+             "categories": "Aliments et boissons à base de végétaux, "
+                           "Nourriture"},
+            {"product_name": "testtwo",
+             "brands": "brandstwo",
+             "url": "http://iamurltwo.com",
+             "categories": "Aliments et boissons à base de végétaux, Nourriture, Ca rend Malade"}
+        ]}
+
+        populate_database.save_food_into_db(request_dict)
+        self.assertEqual(Food.objects.count(), 2)

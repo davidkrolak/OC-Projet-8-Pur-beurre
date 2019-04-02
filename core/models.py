@@ -7,7 +7,7 @@ from django.dispatch import receiver
 class Categories(models.Model):
     name = models.CharField(max_length=500, unique=True)
     product_count = models.IntegerField(default=0)
-    url = models.URLField(unique=True)
+    url = models.URLField()
 
 
 
