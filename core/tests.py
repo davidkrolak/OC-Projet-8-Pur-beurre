@@ -62,4 +62,7 @@ class PopulateDatabaseScriptTests(TestCase):
         ]}
 
         populate_database.save_food_into_db(request_dict)
+
+        testtwo = Food.objects.get(name='testtwo')
         self.assertEqual(Food.objects.count(), 2)
+        self.assertEqual(testtwo.nutriscore, 'Z')

@@ -6,10 +6,39 @@
     padding-right: 10px;
 }
 
+#user_logo {
+    height: 35px;
+    width: 35px;
+}
+
+#carrot_logo {
+    height: 35px;
+    width: 35px;
+    fill: #de9440;
+}
+
+#carrot_logo:hover {
+    fill: #f4623a;
+}
+
+#sign_in_logo {
+    height: 35px;
+    width: 35px;
+}
+
+#sign_out_logo {
+    height: 35px;
+    width: 35px;
+}
+
 /*Account template*/
 #user_account_section_block_top {
     background-image: url("../images/header.jpg");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+.nav-font {
+    font-size: 35px;
 }
