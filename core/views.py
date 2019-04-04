@@ -11,7 +11,9 @@ class HomeView(View):
     template_name = 'core/home.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        form = self.form
+        context_dict = {'form': form}
+        return render(request, self.template_name, context_dict)
 
 
 class ResearchView(View):
@@ -19,12 +21,12 @@ class ResearchView(View):
     template_name = 'core/research.html'
 
     def get(self, request):
-        form = self.form()
+        form = self.form(request.GET)
         if form.is_valid():
-            research = form.cleaned_data.get('research')
+            research = form.cleaned_data.get('food')
             queryset = Food.objects.filter(name__icontains=research)
             if queryset.count() == 0:
                 return redirect('core:no_result')
             else:
-                context_dict = {}
+                context_dict = {"queryset": queryset}
                 return render(request, self.template_name, context_dict)
