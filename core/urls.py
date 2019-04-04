@@ -6,5 +6,8 @@ app_name = 'core'
 urlpatterns = [
     path('',
          HomeView.as_view(),
-         name='home')
+         name='home'),
+    path('research/',
+         ResearchView.as_view(),
+         name='research')
 ]

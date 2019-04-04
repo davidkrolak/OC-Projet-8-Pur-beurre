@@ -10,18 +10,25 @@
         <div class="col-lg-8 text-center">
           <h1 class="text-white">Du gras, oui, mais de qualité</h1>
         </div>
+      </div>
+      <br>
+      <div class="row justify-content-center">
         <div class="col-lg-8 text-center">
           <h2 class="text-white">Trouvez un produit de substitution pour ceux que vous consommez tout les jours</h2>
         </div>
-        <form method="get">
-          {% csrf_token %}
-            <div class="form-inline">
-              {{ field.label_tag }}
-              {{ field }}
+      </div>
+      <br>
+      <div class="row justify-content-center">
+        <form action="{% url 'core:research' %}" method="get" class="col-lg-6">
+          <div class="input-group">
+            {{ form.food }}
+            <div class="input-group-append">
+              <button class="btn btn-secondary" type="submit">Rechercher</button>
             </div>
-        </form>
+          </div>
         </form>
       </div>
+
     </div>
   </section>
 {% endblock %}
