@@ -64,21 +64,30 @@ def save_food_into_db(request_dict):
         except KeyError:
             food_nutriscore = "Z"
         food_url = food["url"]
+        try:
+            food_image_url = food["image_url"]
+        except KeyError:
+            food_image_url = None
         food_categories = food["categories"].split(',')
 
-        entry = create_food_entry_into_db(food_name, food_brand,
+        entry = create_food_entry_into_db(food_name,
+                                          food_brand,
                                           food_nutriscore,
-                                          food_url)
+                                          food_url,
+                                          food_image_url)
+
         add_relationships_between_food_and_categories(food_categories, entry)
 
 
-def create_food_entry_into_db(name, brand, nutriscore, url):
+def create_food_entry_into_db(name, brand, nutriscore, url, image_url):
     try:
         entry = Food()
         entry.name = name
         entry.brand = brand
         entry.nutriscore = nutriscore
         entry.url = url
+        if image_url:
+            entry.image_url = image_url
         entry.clean()
         entry.save()
         return entry

@@ -31,6 +31,7 @@
     width: 35px;
 }
 
+
 /*Account template*/
 #user_account_section_block_top {
     background-image: url("../images/header.jpg");
@@ -41,4 +42,76 @@
 
 .nav-font {
     font-size: 35px;
+}
+
+/*General classes*/
+.first_section {
+    background-image: url("../images/header.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.second_section {
+}
+
+.img_and_nutriscore {
+}
+
+.nutriscore {
+    position: relative;
+    left: 90%;
+    top: 20px;
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 50%;
+}
+
+.rank_a  {
+    background-color: #3d8954;
+    text-align: center;
+    color: white;
+    padding-top: 0.5rem;
+    padding-right: 0.1rem;
+}
+
+.rank_b {
+    background-color: #8ec05b;
+    text-align: center;
+    color: white;
+    padding-top: 0.5rem;
+    padding-right: 0.1rem;
+}
+
+.rank_c {
+    background-color: #f7cc47;
+    text-align: center;
+    color: white;
+    padding-top: 0.5rem;
+    padding-right: 0.1rem;
+}
+
+.rank_d {
+    background-color: #e78b3d;
+    text-align: center;
+    color: white;
+    padding-top: 0.5rem;
+    padding-right: 0.1rem;
+}
+
+.rank_e {
+    background-color: #de5734;
+    text-align: center;
+    color: white;
+    padding-top: 0.5rem;
+    padding-right: 0.1rem;
+}
+
+.food_image {
+    display: block;
+    height: 20rem;
+    width: 20rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
 }

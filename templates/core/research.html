@@ -1,31 +1,52 @@
 {% extends 'base.html' %}
 
-{% block title %} - Résultats
+{% block title %} - Recherche
 {% endblock %}
 
 {% block content %}
-  <section id="user_account_section_block_top" class="page-section h-auto">
+  <section class="page-section h-auto first_section">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8 text-center">
-          <h1>Ma recherche</h1>
+          <h1 class="text-white">{{ request.GET.food }}</h1>
         </div>
       </div>
     </div>
   </section>
 
-  <section>
+  <section class="page-section h-auto second_section">
     <div class="container my-auto">
-      <div class="row">
-        {% for food in queryset %}
-          <div class="col-lg-4 col-md-5 col-sm-4 mx-auto">
-            <h1>{{ food.name }}</h1>
-            <h2>{{ food.brand }}</h2>
-            <h3>{{ food.nutriscore }}</h3>
-            <a>{{ food.url }}</a>
+      {% if queryset %}
+        {% for subset in queryset %}
+          <div class="row">
+            {% for food in subset %}
+              <div class="col-lg-4 col-sm-8 mx-auto">
+                <div class="img_and_nutriscore">
+                  {% if food.nutriscore == 'A' %}
+                    <div class="nutriscore rank_a">{{ food.nutriscore }}</div>
+                  {% elif food.nutriscore == 'B' %}
+                    <div class="nutriscore rank_b">{{ food.nutriscore }}</div>
+                  {% elif food.nutriscore == 'C' %}
+                    <div class="nutriscore rank_c">{{ food.nutriscore }}</div>
+                  {% elif food.nutriscore == 'D' %}
+                    <div class="nutriscore rank_d">{{ food.nutriscore }}</div>
+                  {% elif food.nutriscore == 'E' %}
+                    <div class="nutriscore rank_e">{{ food.nutriscore }}</div>
+                  {% endif %}
+                  <img src="{{ food.image_url }}" alt="food_image" class="food_image">
+                </div>
+                <p>{{ food.name }} par {{ food.brand }}</p>
+              </div>
+            {% endfor %}
           </div>
         {% endfor %}
-      </div>
+      {% else %}
+        <div class="row justify-content-center">
+          <div class="col-lg-8 text-center">
+            <h1>Pas de résultats !</h1>
+          </div>
+        </div>
+      {% endif %}
     </div>
   </section>
 {% endblock %}

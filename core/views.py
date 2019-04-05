@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 
@@ -25,8 +25,17 @@ class ResearchView(View):
         if form.is_valid():
             research = form.cleaned_data.get('food')
             queryset = Food.objects.filter(name__icontains=research)
-            if queryset.count() == 0:
-                return redirect('core:no_result')
+
+            if queryset.count() <= 0:
+                return render(request, self.template_name)
             else:
-                context_dict = {"queryset": queryset}
+                new_queryset = []
+                for list in self.chunks(queryset, 3):
+                    new_queryset.append(list)
+
+                context_dict = {"queryset": new_queryset}
                 return render(request, self.template_name, context_dict)
+
+    def chunks(self, l, n):
+        for i in range(0, len(l), n):
+            yield l[i:i + n]

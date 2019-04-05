@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %} - Mes Aliments
+{% endblock %}
+
+{% block content %}
+  <section id="user_account_section_block_top" class="page-section h-auto">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <h1>Mes Aliments</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container my-auto">
+      {% for subset in queryset %}
+        <div class="row">
+          {% for food in subset %}
+            <div class="col-lg-4 col-sm-8 mx-auto">
+              <h1>{{ food.name }}</h1>
+              <h2>{{ food.brand }}</h2>
+              <h3>{{ food.nutriscore }}</h3>
+              <a>{{ food.url }}</a>
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

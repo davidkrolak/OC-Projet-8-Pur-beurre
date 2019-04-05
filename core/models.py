@@ -10,13 +10,15 @@ class Categories(models.Model):
     url = models.URLField()
 
 
-
 class Food(models.Model):
     name = models.CharField(max_length=500, unique=True)
     brand = models.CharField(max_length=250)
     nutriscore = models.CharField(max_length=1)
     url = models.URLField(unique=True)
+    image_url = models.URLField(unique=True,
+                                default="https://upload.wikimedia.org/wikipedia/commons/c/c5/Foods.jpg")
     categories = models.ManyToManyField('Categories')
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

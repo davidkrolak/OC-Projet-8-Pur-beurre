@@ -9,5 +9,5 @@ urlpatterns = [
          name='home'),
     path('research/',
          ResearchView.as_view(),
-         name='research')
+         name='research'),
 ]
