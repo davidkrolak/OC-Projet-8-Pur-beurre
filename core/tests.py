@@ -1,8 +1,8 @@
 from django.test import TestCase
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
-from core.populate_database import requests
-from core import populate_database
+from core.management.commands.populatedb import requests
+from core.management.commands import populatedb
 
 from core.models import Categories, Food
 
@@ -15,7 +15,7 @@ class PopulateDatabaseScriptTests(TestCase):
         """"""
         mock_requests_get.return_value = requests.Response()
         mock_requests_get.return_value._content = b'{"test":"test"}'
-        request_dict = populate_database.api_categories_request()
+        request_dict = populatedb.api_categories_request()
 
         self.assertTrue(type(request_dict) is dict, 'yes')
 
@@ -27,7 +27,7 @@ class PopulateDatabaseScriptTests(TestCase):
                                   "url": "http://urltest2.com",
                                   "products": "5"}],
                         "count": 2}
-        populate_database.save_categories_into_db(request_dict)
+        populatedb.save_categories_into_db(request_dict)
 
     @patch.object(requests, 'get')
     def test_api_food_request_return_dict(self, mock_requests_get):
@@ -42,7 +42,7 @@ class PopulateDatabaseScriptTests(TestCase):
         category.clean()
         category.save()
 
-        request_dict = populate_database.api_food_request(category)
+        request_dict = populatedb.api_food_request(category)
 
         self.assertTrue(type(request_dict), dict)
 
@@ -61,7 +61,7 @@ class PopulateDatabaseScriptTests(TestCase):
              "categories": "Aliments et boissons à base de végétaux, Nourriture, Ca rend Malade"}
         ]}
 
-        populate_database.save_food_into_db(request_dict)
+        populatedb.save_food_into_db(request_dict)
 
         testtwo = Food.objects.get(name='testtwo')
         self.assertEqual(Food.objects.count(), 2)

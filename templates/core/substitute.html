@@ -1,27 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %} - Recherche
+{% block title %} - Résultats
 {% endblock %}
 
 {% block content %}
-  <section class="page-section h-auto first_section">
+  <section id="user_account_section_block_top" class="page-section h-auto">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8 text-center">
-          <h1 class="text-white">{{ request.GET.food }}</h1>
+          <h1>Ma recherche</h1>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="page-section h-auto second_section">
+  <section>
     <div class="container my-auto">
       {% if queryset %}
         {% for subset in queryset %}
           <div class="row">
             {% for food in subset %}
               <div class="col-lg-4 col-sm-8 mx-auto">
-                <a href="{% url 'core:substitute' id=food.id %}">
+                <a href="{% url 'core:product' id=food.id %}">
                   <div class="img_and_nutriscore">
                     {% if food.nutriscore == 'A' %}
                       <div class="nutriscore rank_a">{{ food.nutriscore }}</div>

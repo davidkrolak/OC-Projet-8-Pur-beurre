@@ -10,4 +10,11 @@ urlpatterns = [
     path('research/',
          ResearchView.as_view(),
          name='research'),
+    path('substitute/<int:id>',
+         SubstituteView.as_view(),
+         name='substitute'),
+    path('product/<int:id>',
+         ProductView.as_view(),
+         name='product')
+
 ]

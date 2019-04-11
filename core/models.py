@@ -8,6 +8,7 @@ class Categories(models.Model):
     name = models.CharField(max_length=500, unique=True)
     product_count = models.IntegerField(default=0)
     url = models.URLField()
+    off_id = models.TextField()
 
 
 class Food(models.Model):
