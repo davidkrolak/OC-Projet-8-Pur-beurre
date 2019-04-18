@@ -1,3 +1,4 @@
+from unittest.mock import MagicMock, patch
 from django.test import TestCase
 from django.urls import reverse
 
@@ -107,14 +108,102 @@ class ProductViewTests(TestCase):
                             image_url='http://testimageurl.com')
 
     def test_get_request_correct_html(self):
-        response = self.client.get(reverse('core:home'))
+        id = Food.objects.first().id
+        response = self.client.get(reverse('core:product', args=[id]))
         html = response.content.decode('utf8')
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(html.startswith('<!DOCTYPE html>'))
         self.assertTrue(html.endswith('</html>'))
-        self.assertInHTML('http://testurl.com', html)
+        self.assertInHTML('<a>http://testurl.com</a>', html)
 
 
 class PopulateDbTests(TestCase):
     """"""
+
+    def setUp(self) -> None:
+        self.command = populatedb.Command()
+
+    @patch('requests.get')
+    def test_api_categories_request(self, get):
+        response = self.command.api_categories_request()
+        self.assertTrue(get.called)
+
+    def test_save_categories_into_db(self):
+        request_dict = {'tags': [
+            {'name': 'testname',
+             'url': 'http://testurl.com',
+             'products': 1,
+             'id': 'testid'}
+        ]}
+        self.command.save_categories_into_db(request_dict)
+
+        self.assertEqual(Categories.objects.count(), 1)
+
+    @patch('requests.get')
+    def test_api_food_request(self, get):
+        category = MagicMock()
+        category.off_id = 'test'
+
+        response = self.command.api_food_request(category)
+        self.assertTrue(get.called)
+
+    def test_save_food_into_db(self):
+        request_dict = {'products': [
+            {'product_name': 'testname',
+             'brands': 'testbrand',
+             'nutrition_grades': 'A',
+             'url': 'http://testurl.com',
+             'image_url': 'http://testimageurl.com',
+             'categories': 'testcatone, testcattwo'}
+        ]}
+
+        self.command.save_food_into_db(request_dict)
+
+        f = Food.objects.first()
+        self.assertEqual(Food.objects.count(), 1)
+        self.assertEqual(f.categories.count(), 2)
+
+    def test_save_food_into_db_no_nutriscore(self):
+        request_dict = {'products': [
+            {'product_name': 'testname',
+             'brands': 'testbrand',
+             'url': 'http://testurl.com',
+             'image_url': 'http://testimageurl.com',
+             'categories': 'testcatone, testcattwo'}
+        ]}
+
+        self.command.save_food_into_db(request_dict)
+
+        f = Food.objects.first()
+        self.assertEqual(Food.objects.count(), 1)
+        self.assertEqual(f.categories.count(), 2)
+        self.assertEqual(f.nutriscore, 'Z')
+
+    def test_create_food_entry_into_db(self):
+        name = 'testname'
+        brand = 'testbrand'
+        nutriscore = 'A'
+        url = 'http://testurl.com'
+        image_url = 'http://testimageurl.com'
+
+        self.command.create_food_entry_into_db(name, brand, nutriscore, url,
+                                               image_url)
+
+        self.assertEqual(Food.objects.count(), 1)
+
+    def test_add_relationships_between_food_and_categories(self):
+        name = 'testname'
+        brand = 'testbrand'
+        nutriscore = 'A'
+        url = 'http://testurl.com'
+        image_url = 'http://testimageurl.com'
+        categories = ['testcatone', 'testcattwo']
+        entry = Food(name=name, brand=brand, nutriscore=nutriscore, url=url,
+                     image_url=image_url)
+        entry.save()
+
+        self.command.add_relationships_between_food_and_categories(
+                categories, entry)
+
+        self.assertEqual(entry.categories.count(), 2)
