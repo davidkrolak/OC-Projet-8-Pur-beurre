@@ -16,5 +16,4 @@ urlpatterns = [
     path('product/<int:id>',
          ProductView.as_view(),
          name='product')
-
 ]

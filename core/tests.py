@@ -1,68 +1,120 @@
 from django.test import TestCase
-from unittest.mock import patch
+from django.urls import reverse
 
-from core.management.commands.populatedb import requests
-from core.management.commands import populatedb
-
-from core.models import Categories, Food
+from .management.commands import populatedb
+from .models import *
 
 
-class PopulateDatabaseScriptTests(TestCase):
+class HomeViewTests(TestCase):
     """"""
 
-    @patch.object(requests, 'get')
-    def test_api_categories_request_return_dict(self, mock_requests_get):
-        """"""
-        mock_requests_get.return_value = requests.Response()
-        mock_requests_get.return_value._content = b'{"test":"test"}'
-        request_dict = populatedb.api_categories_request()
+    def test_get_request_correct_html(self):
+        response = self.client.get(reverse('core:home'))
+        html = response.content.decode('utf8')
 
-        self.assertTrue(type(request_dict) is dict, 'yes')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(html.startswith('<!DOCTYPE html>'))
+        self.assertTrue(html.endswith('</html>'))
+        self.assertInHTML('''<h1 class="text-white">Du gras, oui, mais de 
+        qualité</h1>''', html)
 
-    def test_save_categories_into_db_right_amount(self):
-        request_dict = {"tags": [{"name": "testone",
-                                  "url": "http://urltest1.com",
-                                  "products": "5"},
-                                 {"name": "testtwo",
-                                  "url": "http://urltest2.com",
-                                  "products": "5"}],
-                        "count": 2}
-        populatedb.save_categories_into_db(request_dict)
 
-    @patch.object(requests, 'get')
-    def test_api_food_request_return_dict(self, mock_requests_get):
-        """"""
-        mock_requests_get.return_value = requests.Response()
-        mock_requests_get.return_value._content = b'{"test":"test"}'
+class ResearchViewTests(TestCase):
+    """"""
 
-        category = Categories()
-        category.name = "Aliments et boissons à base de végétaux"
-        category.url = "https://fr.openfoodfacts.org/categorie/aliments-et-boissons-a-base-de-vegetaux"
-        category.product_count = 58226
-        category.clean()
-        category.save()
+    def setUp(self):
+        Food.objects.create(name='testname',
+                            brand='testbrand',
+                            nutriscore='A',
+                            url='http://testurl.com',
+                            image_url='http://testimageurl.com')
 
-        request_dict = populatedb.api_food_request(category)
+    def test_get_request_got_results(self):
+        form_data = {'food': 'test'}
+        response = self.client.get(reverse('core:research'), form_data)
+        html = response.content.decode('utf8')
 
-        self.assertTrue(type(request_dict), dict)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(html.startswith('<!DOCTYPE html>'))
+        self.assertTrue(html.endswith('</html>'))
+        self.assertInHTML('''
+        <img src="http://testimageurl.com" alt="food_image" 
+        class="food_image">''', html)
 
-    def test_save_food_into_db(self):
-        """"""
-        request_dict = {"products": [
-            {"product_name": "testone",
-             "brands": "brandsone",
-             "nutrition_grades": "A",
-             "url": "http://iamurlone.com",
-             "categories": "Aliments et boissons à base de végétaux, "
-                           "Nourriture"},
-            {"product_name": "testtwo",
-             "brands": "brandstwo",
-             "url": "http://iamurltwo.com",
-             "categories": "Aliments et boissons à base de végétaux, Nourriture, Ca rend Malade"}
-        ]}
+    def test_get_request_no_result(self):
+        form_data = {'food': 'iamnotaresult'}
+        response = self.client.get(reverse('core:research'), form_data)
+        html = response.content.decode('utf8')
 
-        populatedb.save_food_into_db(request_dict)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(html.startswith('<!DOCTYPE html>'))
+        self.assertTrue(html.endswith('</html>'))
+        self.assertInHTML('<h1>Pas de résultats !</h1>', html)
 
-        testtwo = Food.objects.get(name='testtwo')
-        self.assertEqual(Food.objects.count(), 2)
-        self.assertEqual(testtwo.nutriscore, 'Z')
+
+class SubstituteViewTests(TestCase):
+    """"""
+
+    def setUp(self):
+        c = Categories.objects.create(name='testcat',
+                                      product_count=2,
+                                      url='http://testcaturl.com',
+                                      off_id='test')
+        f1 = Food.objects.create(name='testname',
+                                 brand='testbrand',
+                                 nutriscore='B',
+                                 url='http://testurl.com',
+                                 image_url='http://testimageurl.com',
+                                 id=1)
+        f1.categories.add(c)
+        f2 = Food.objects.create(name='testnametwo',
+                                 brand='testbrandtwo',
+                                 nutriscore='A',
+                                 url='http://testurltwo.com',
+                                 image_url='http://testimageurltwo.com',
+                                 id=2)
+        f2.categories.add(c)
+
+    def test_get_request_got_results(self):
+        response = self.client.get(reverse('core:substitute', args=[1]))
+        html = response.content.decode('utf8')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(html.startswith('<!DOCTYPE html>'))
+        self.assertTrue(html.endswith('</html>'))
+        self.assertInHTML('''
+        <img src="http://testimageurltwo.com" alt="food_image" 
+        class="food_image">''', html)
+
+    def test_get_request_no_results(self):
+        response = self.client.get(reverse('core:substitute', args=[2]))
+        html = response.content.decode('utf8')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(html.startswith('<!DOCTYPE html>'))
+        self.assertTrue(html.endswith('</html>'))
+        self.assertInHTML('<h1>Pas de résultats !</h1>', html)
+
+
+class ProductViewTests(TestCase):
+    """"""
+
+    def setUp(self):
+        Food.objects.create(name='testname',
+                            brand='testbrand',
+                            nutriscore='A',
+                            url='http://testurl.com',
+                            image_url='http://testimageurl.com')
+
+    def test_get_request_correct_html(self):
+        response = self.client.get(reverse('core:home'))
+        html = response.content.decode('utf8')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(html.startswith('<!DOCTYPE html>'))
+        self.assertTrue(html.endswith('</html>'))
+        self.assertInHTML('http://testurl.com', html)
+
+
+class PopulateDbTests(TestCase):
+    """"""

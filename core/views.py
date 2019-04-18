@@ -49,14 +49,14 @@ class SubstituteView(View):
         nutriscore_list = self.nutriscore_list(food.nutriscore)
 
         queryset = Food.objects.filter(categories=categories[0]).filter(
-                nutriscore__in=nutriscore_list)
+                nutriscore__in=nutriscore_list).exclude(id=id)
 
         for category in categories[1:5]:
             query = Food.objects.filter(categories=category).filter(
-                    nutriscore__in=nutriscore_list)
+                    nutriscore__in=nutriscore_list).exclude(id=id)
             queryset = queryset.intersection(query)
 
-        if queryset.count() <= 0:
+        if queryset.count() == 0:
             return render(request, self.template_name)
         else:
             new_queryset = []
