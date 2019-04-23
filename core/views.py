@@ -7,7 +7,7 @@ from .forms import FoodRequestForm
 
 class HomeView(View):
     form = FoodRequestForm
-    template_name = 'core/home.html'
+    template_name = "core/home.html"
 
     def get(self, request):
         form = self.form
@@ -17,7 +17,7 @@ class HomeView(View):
 
 class ResearchView(View):
     form = FoodRequestForm
-    template_name = 'core/research.html'
+    template_name = "core/research.html"
 
     def get(self, request):
         form = self.form(request.GET)
@@ -63,7 +63,8 @@ class SubstituteView(View):
             for list in self.chunks(queryset, 3):
                 new_queryset.append(list)
 
-            context_dict = {"queryset": new_queryset}
+            context_dict = {"queryset": new_queryset,
+                            "research": food}
             return render(request, self.template_name, context_dict)
 
     def nutriscore_list(self, nutriscore):

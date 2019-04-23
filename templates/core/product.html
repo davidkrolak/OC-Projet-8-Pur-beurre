@@ -1,23 +1,69 @@
 {% extends 'base.html' %}
 
-{% block title %} - Résultats
+{% block title %} - {{ food.name }}
 {% endblock %}
 
 {% block content %}
-  <section id="user_account_section_block_top" class="page-section h-auto">
+  <section class="page-section food_section h-25"
+          style="background-image: url({{ food.image_url }})">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-8 text-center">
-          <h1>Ma recherche</h1>
+          <h1 class="section_title">{{ food.name }}</h1>
         </div>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="container my-auto">
-      <h2>{{ food.name }}</h2>
-      <a>{{ food.url }}</a>
+  <section class="h-auto my-5">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-lg-4 text-center">
+          {% if food.nutriscore == 'A' %}
+            {% include 'svg/nutriscore-a.svg' %}
+          {% elif food.nutriscore == 'B' %}
+            {% include 'svg/nutriscore-b.svg' %}
+          {% elif food.nutriscore == 'C' %}
+            {% include 'svg/nutriscore-c.svg' %}
+          {% elif food.nutriscore == 'D' %}
+            {% include 'svg/nutriscore-d.svg' %}
+          {% elif food.nutriscore == 'E' %}
+            {% include 'svg/nutriscore-e.svg' %}
+          {% elif food.nutriscore == 'Z' %}
+            {% include 'svg/nutriscore-z.svg' %}
+          {% endif %}
+        </div>
+        <div class="col-lg-4">
+          <h2 class="text-center">Repères nutritionnels pour 100g:</h2>
+          <ul class="list-group">
+            {% if food.fat %}
+              <li class="list-group-item">Matières grasses: {{ food.fat }}g</li>
+            {% elif not food.fat %}
+              <li class="list-group-item">Matières grasses: Non connu</li>
+            {% endif %}
+            {% if food.saturated_fat %}
+              <li class="list-group-item">Matières grasses saturées: {{ food.saturated_fat }}g</li>
+            {% elif not food.saturated_fat %}
+              <li class="list-group-item">Matières grasses saturées: Non connu</li>
+            {% endif %}
+            {% if food.sugars %}
+              <li class="list-group-item">Sucre: {{ food.sugars }}g</li>
+            {% elif not food.sugars %}
+              <li class="list-group-item">Sucres: Non connu</li>
+            {% endif %}
+            {% if food.salt %}
+              <li class="list-group-item">Sel: {{ food.salt }}g</li>
+            {% elif not food.salt %}
+              <li class="list-group-item">Sel: Non connu</li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <a href="{{ food.url }}" class="btn btn-primary">Voir la fiche d'OpenFoodFacts</a>
+        </div>
+      </div>
     </div>
   </section>
 {% endblock %}

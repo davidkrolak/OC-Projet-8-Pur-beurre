@@ -1,0 +1,51 @@
+{% load staticfiles %}
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand js-scroll-trigger" href="{% url 'core:home' %}">
+      <img id="logo_pur_beurre" class="d-inline-block" src="{% static 'images/logo_pur_beurre.png' %}" alt="logo pur beurre">Pur Beurre
+    </a>
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+
+      <form class="form-inline ml-auto my-2 my-lg-0" action="{% url 'core:research' %}" method="get">
+        <input type="text" name="food" class="form-control" placeholder="Rechercher" aria-label="rechercher" maxlength="500" required="" id="id_food">
+      </form>
+
+      <ul class="navbar-nav">
+
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="{% url 'user:account' %}">
+              {% include 'svg/user.svg' %}
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="">
+              {% include 'svg/carrot.svg' %}
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="{% url 'user:logout' %}">
+              {% include 'svg/sign-out.svg' %}
+            </a>
+          </li>
+
+        {% else %}
+
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="{% url 'user:login' %}">
+              {% include 'svg/sign-in.svg' %}
+            </a>
+          </li>
+
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

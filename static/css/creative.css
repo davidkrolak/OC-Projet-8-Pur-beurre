@@ -11419,7 +11419,7 @@ hr.light {
     #mainNav {
         -webkit-box-shadow: none;
         box-shadow: none;
-        background-color: #111111;
+        background-color: rgba(17, 17, 17, 0.91);
     }
 
     #mainNav .navbar-brand {
@@ -11446,7 +11446,7 @@ hr.light {
     #mainNav.navbar-scrolled {
         -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        background-color: #fff;
+        background-color: rgb(242, 242, 242);
     }
 
     #mainNav.navbar-scrolled .navbar-brand {

@@ -87,14 +87,28 @@ class Command(BaseCommand):
         for food in food_list:
             food_name = self.string_cleaner(food["product_name"])
             food_brand = self.string_cleaner(food["brands"].split(',')[0])
-
             try:
                 food_nutriscore = self.string_cleaner(food["nutrition_grades"])
             except KeyError:
                 food_nutriscore = "Z"
-
+            try:
+                food_fat = float(food["nutriments"]["fat_100g"])
+            except (KeyError, TypeError, ValueError):
+                food_fat = None
+            try:
+                food_saturated_fat = float(food["nutriments"][
+                                               "saturated-fat_100g"])
+            except (KeyError, TypeError, ValueError):
+                food_saturated_fat = None
+            try:
+                food_sugars = float(food["nutriments"]["sugars_100g"])
+            except (KeyError, TypeError, ValueError):
+                food_sugars = None
+            try:
+                food_salt = float(food["nutriments"]["salt_100g"])
+            except (KeyError, TypeError, ValueError):
+                food_salt = None
             food_url = food["url"]
-
             try:
                 food_image_url = food["image_url"]
             except KeyError:
@@ -105,19 +119,28 @@ class Command(BaseCommand):
             entry = self.create_food_entry_into_db(food_name,
                                                    food_brand,
                                                    food_nutriscore,
+                                                   food_fat,
+                                                   food_saturated_fat,
+                                                   food_sugars,
+                                                   food_salt,
                                                    food_url,
                                                    food_image_url)
 
             self.add_relationships_between_food_and_categories(food_categories,
                                                                entry)
 
-    def create_food_entry_into_db(self, name, brand, nutriscore, url,
+    def create_food_entry_into_db(self, name, brand, nutriscore, fat,
+                                  saturated_fat, sugars, salt, url,
                                   image_url):
         try:
             entry = Food()
             entry.name = name
             entry.brand = brand
             entry.nutriscore = nutriscore
+            entry.fat = fat
+            entry.saturated_fat = saturated_fat
+            entry.sugars = sugars
+            entry.salt = salt
             entry.url = url
             if image_url:
                 entry.image_url = image_url

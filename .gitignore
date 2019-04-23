@@ -1,5 +1,4 @@
 venv
 .idea
-.env
-creative.html
+dev.env
 geckodriver.log

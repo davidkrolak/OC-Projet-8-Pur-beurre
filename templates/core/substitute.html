@@ -4,19 +4,20 @@
 {% endblock %}
 
 {% block content %}
-  <section id="user_account_section_block_top" class="page-section h-auto">
+  <section class="page-section h-auto first_section">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h1>Ma recherche</h1>
+        <div class="col-lg-auto">
+          <h1 class="section_title text-center">{{ research.name }}</h1>
         </div>
       </div>
     </div>
   </section>
 
-  <section>
+  <section class="page-section h-auto">
     <div class="container my-auto">
       {% if queryset %}
+        <h2 class="text-center">Vous pouvez remplacer cet aliment par:</h2>
         {% for subset in queryset %}
           <div class="row">
             {% for food in subset %}
@@ -33,15 +34,21 @@
                       <div class="nutriscore rank_d">{{ food.nutriscore }}</div>
                     {% elif food.nutriscore == 'E' %}
                       <div class="nutriscore rank_e">{{ food.nutriscore }}</div>
+                    {% elif food.nutriscore == 'Z' %}
+                      <div class="nutriscore rank_z">?</div>
                     {% endif %}
                     <img src="{{ food.image_url }}" alt="food_image" class="food_image">
                   </div>
                 </a>
-                <p class="text-center">{{ food.name }} par {{ food.brand }}</p>
+                <p class="text-center food_title">{{ food.name }} par {{ food.brand }}</p>
                 {% if user.is_authenticated %}
-                  <form>
-                    <button>Sauvegarder</button>
-                  </form>
+                  <div class="save_button">
+                    <form>
+                      <button type="button" class="btn btn-outline-dark">
+                        <i class="fas fa-save"></i> Sauvegarder
+                      </button>
+                    </form>
+                  </div>
                 {% endif %}
               </div>
             {% endfor %}

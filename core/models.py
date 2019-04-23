@@ -15,6 +15,10 @@ class Food(models.Model):
     name = models.CharField(max_length=500, unique=True)
     brand = models.CharField(max_length=250)
     nutriscore = models.CharField(max_length=1)
+    fat = models.FloatField(null=True)
+    saturated_fat = models.FloatField(null=True)
+    sugars = models.FloatField(null=True)
+    salt = models.FloatField(null=True)
     url = models.URLField(unique=True)
     image_url = models.URLField(unique=True,
                                 default="https://upload.wikimedia.org/wikipedia/commons/c/c5/Foods.jpg")
