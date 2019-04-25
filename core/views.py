@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views import View
+from django.core.paginator import Paginator
 
 from .models import Food
 from .forms import FoodRequestForm
@@ -21,6 +22,7 @@ class ResearchView(View):
 
     def get(self, request):
         form = self.form(request.GET)
+        page = request.GET.get('page')
         if form.is_valid():
             research = form.cleaned_data.get('food')
             queryset = Food.objects.filter(name__icontains=research)
@@ -32,7 +34,9 @@ class ResearchView(View):
                 for list in self.chunks(queryset, 3):
                     new_queryset.append(list)
 
-                context_dict = {"queryset": new_queryset}
+                paginator = Paginator(new_queryset, 10)
+                foods = paginator.get_page(page)
+                context_dict = {"queryset": foods}
                 return render(request, self.template_name, context_dict)
 
     def chunks(self, l, n):
@@ -44,6 +48,7 @@ class SubstituteView(View):
     template_name = 'core/substitute.html'
 
     def get(self, request, id):
+        page = request.GET.get('page')
         food = Food.objects.get(id=id)
         categories = food.categories.all().order_by('id')
         nutriscore_list = self.nutriscore_list(food.nutriscore)
@@ -63,7 +68,9 @@ class SubstituteView(View):
             for list in self.chunks(queryset, 3):
                 new_queryset.append(list)
 
-            context_dict = {"queryset": new_queryset,
+            paginator = Paginator(new_queryset, 10)
+            foods = paginator.get_page(page)
+            context_dict = {"queryset": foods,
                             "research": food}
             return render(request, self.template_name, context_dict)
 
@@ -95,3 +102,10 @@ class ProductView(View):
         context_dict = {'food': food}
 
         return render(request, self.template_name, context_dict)
+
+
+class LegalNoticeView(View):
+    template_name = 'core/legal_notice.html'
+
+    def get(self, request):
+        return render(request, self.template_name)

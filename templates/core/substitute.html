@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-  <section class="page-section h-auto first_section">
+  <section class="page-section h-25 first_section">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-auto">
@@ -61,6 +61,23 @@
           </div>
         </div>
       {% endif %}
+      <div class="pagination row justify-content-center my-5">
+      <span class="step-links">
+        {% if queryset.has_previous %}
+          <a href="?page=1">&laquo; first</a>
+          <a href="?page={{ queryset.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ queryset.number }} of {{ queryset.paginator.num_pages }}.
+        </span>
+
+        {% if queryset.has_next %}
+          <a href="?page={{ queryset.next_page_number }}">next</a>
+          <a href="?page={{ queryset.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+      </span>
+      </div>
     </div>
   </section>
 {% endblock %}
