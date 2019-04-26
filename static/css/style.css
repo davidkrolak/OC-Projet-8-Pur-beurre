@@ -66,7 +66,7 @@ html, body {
 .section_title {
     color: white;
     background-color: rgba(6, 6, 6, 0.73);
-    border-radius: 2em;
+    border-radius: 0.5em;
     padding: 0.4em;
 }
 
@@ -78,6 +78,7 @@ html, body {
 }
 
 .second_section {
+    background-color: #e8a75d;
 }
 
 .img_and_nutriscore {

@@ -14,10 +14,10 @@
     </div>
   </section>
 
-  <section class="page-section h-auto second_section">
+  <section class="page-section h-auto">
     <div class="container my-auto">
       {% if queryset %}
-        <h2 class="text-center">Cliquez sur un aliments pour avoir une liste de substituts</h2>
+        <h2 class="text-center my-5">Cliquez sur un aliments pour avoir une liste de substituts</h2>
         {% for subset in queryset %}
           <div class="row">
             {% for food in subset %}
@@ -43,8 +43,10 @@
                 <p class="text-center food_title">{{ food.name }} par {{ food.brand }}</p>
                 {% if user.is_authenticated %}
                   <div class="save_button">
-                    <form>
-                      <button type="button" class="btn btn-outline-dark">
+                    <form class="favorite_form" action="{% url 'core:favorite' %}" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="food_id" value="{{ food.id }}">
+                      <button type="submit" class="btn btn-outline-dark">
                         <i class="fas fa-save"></i> Sauvegarder
                       </button>
                     </form>

@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 from .management.commands import populatedb
 from .models import *
@@ -115,7 +116,51 @@ class ProductViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(html.startswith('<!DOCTYPE html>'))
         self.assertTrue(html.endswith('</html>'))
-        self.assertInHTML('<a>http://testurl.com</a>', html)
+        self.assertInHTML("""
+          <a href="http://testurl.com" class="btn btn-primary">Voir la fiche 
+          d'OpenFoodFacts</a>
+        """, html)
+
+
+class FavoriteFoodViewTests(TestCase):
+    """"""
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='test',
+                                             password='test1234',
+                                             email='test@mail.com',
+                                             first_name='test_first_name')
+        self.food = Food.objects.create(name='testname',
+                                        brand='testbrand',
+                                        nutriscore='A',
+                                        url='http://testurl.com',
+                                        image_url='http://testimageurl.com')
+
+    def test_post_request_food_saved_user_logged_in(self):
+        self.client.login(username='test', password='test1234')
+        form_data = {"food_id": self.food.id}
+        self.client.post(reverse('core:favorite'), form_data)
+
+        self.assertEqual(self.user.profile.favorite_foods.count(), 1)
+        self.assertEqual(self.user.profile.favorite_foods.first(), self.food)
+
+    def test_post_request_try_to_fav_an_allready_faved_food(self):
+        self.client.login(username='test', password='test1234')
+        self.user.profile.favorite_foods.add(self.food)
+
+        form_data = {"food_id": self.food.id}
+        response = self.client.post(reverse('core:favorite'), form_data)
+
+        self.assertEqual(self.user.profile.favorite_foods.count(), 1)
+        self.assertEqual(self.user.profile.favorite_foods.first(), self.food)
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_request_food_user_not_logged_in(self):
+        form_data = {"food_id": self.food.id}
+        response = self.client.post(reverse('core:favorite'), form_data)
+
+        self.assertEqual(self.user.profile.favorite_foods.count(), 0)
+        self.assertEqual(self.user.profile.favorite_foods.first(), None)
 
 
 class PopulateDbTests(TestCase):
@@ -184,11 +229,16 @@ class PopulateDbTests(TestCase):
         name = 'testname'
         brand = 'testbrand'
         nutriscore = 'A'
+        fat = 0.5
+        saturated_fat = 1
+        sugars = 2
+        salt = 12.5
         url = 'http://testurl.com'
         image_url = 'http://testimageurl.com'
 
-        self.command.create_food_entry_into_db(name, brand, nutriscore, url,
-                                               image_url)
+        self.command.create_food_entry_into_db(name, brand, nutriscore, fat,
+                                               saturated_fat, sugars, salt,
+                                               url, image_url)
 
         self.assertEqual(Food.objects.count(), 1)
 

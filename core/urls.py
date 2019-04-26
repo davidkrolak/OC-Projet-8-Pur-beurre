@@ -15,5 +15,8 @@ urlpatterns = [
          name='substitute'),
     path('product/<int:id>',
          ProductView.as_view(),
-         name='product')
+         name='product'),
+    path('favorite',
+         FavoriteFoodView.as_view(),
+         name='favorite')
 ]

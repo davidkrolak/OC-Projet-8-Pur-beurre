@@ -1,5 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 
 from .models import Food
@@ -102,6 +106,32 @@ class ProductView(View):
         context_dict = {'food': food}
 
         return render(request, self.template_name, context_dict)
+
+
+class FavoriteFoodView(View):
+    """"""
+    template_name = 'core/favorite.html'
+
+    @method_decorator(login_required)
+    def post(self, request):
+        food_id = request.POST['food_id']
+        user = request.user
+        if user.profile.favorite_foods.filter(id=food_id).count() == 1:
+            return JsonResponse({})
+        elif user.profile.favorite_foods.filter(id=food_id).count() == 0:
+            user.profile.favorite_foods.add(food_id)
+            return JsonResponse({'status': 'ok'})
+
+    @method_decorator(login_required)
+    def get(self, request):
+        user = request.user
+        page = request.GET.get('page')
+        food = user.profile.favorite_foods.all()
+        return render(request, self.template_name)
+
+    def chunks(self, l, n):
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
 
 
 class LegalNoticeView(View):
