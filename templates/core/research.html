@@ -42,15 +42,21 @@
                 </a>
                 <p class="text-center food_title">{{ food.name }} par {{ food.brand }}</p>
                 {% if user.is_authenticated %}
-                  <div class="save_button">
-                    <form class="favorite_form" action="{% url 'core:favorite' %}" method="post">
-                      {% csrf_token %}
-                      <input type="hidden" name="food_id" value="{{ food.id }}">
-                      <button type="submit" class="btn btn-outline-dark">
-                        <i class="fas fa-save"></i> Sauvegarder
+                  {% if food in favorite_foods %}
+                    <div>
+                      <button class="btn btn-success active save_button" disabled>
+                        <i class="fas fa-check"></i> Sauvegardé
                       </button>
-                    </form>
-                  </div>
+                    </div>
+                  {% else %}
+                      <form class="favorite_form save_button" action="{% url 'core:favorite' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="food_id" value="{{ food.id }}">
+                        <button type="submit" class="btn btn-outline-dark">
+                          <i class="fas fa-save"></i> Sauvegarder
+                        </button>
+                      </form>
+                  {% endif %}
                 {% endif %}
               </div>
             {% endfor %}
@@ -64,7 +70,6 @@
         </div>
       {% endif %}
     </div>
-
     <div class="pagination row justify-content-center my-5">
     <span class="step-links">
         {% if queryset.has_previous %}

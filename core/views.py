@@ -41,6 +41,10 @@ class ResearchView(View):
                 paginator = Paginator(new_queryset, 10)
                 foods = paginator.get_page(page)
                 context_dict = {"queryset": foods}
+                if request.user:
+                    foods = request.user.profile.favorite_foods.all()
+                    context_dict['favorite_foods'] = foods
+
                 return render(request, self.template_name, context_dict)
 
     def chunks(self, l, n):
@@ -76,6 +80,9 @@ class SubstituteView(View):
             foods = paginator.get_page(page)
             context_dict = {"queryset": foods,
                             "research": food}
+            if request.user:
+                foods = request.user.profile.favorite_foods.all()
+                context_dict['favorite_foods'] = foods
             return render(request, self.template_name, context_dict)
 
     def nutriscore_list(self, nutriscore):

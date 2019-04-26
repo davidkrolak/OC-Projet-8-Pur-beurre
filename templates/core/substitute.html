@@ -42,13 +42,21 @@
                 </a>
                 <p class="text-center food_title">{{ food.name }} par {{ food.brand }}</p>
                 {% if user.is_authenticated %}
-                  <div class="save_button">
-                    <form>
-                      <button type="button" class="btn btn-outline-dark">
+                  {% if food in favorite_foods %}
+                    <div>
+                      <button class="btn btn-success active" disabled>
+                        <i class="fas fa-check"></i> Sauvegardé
+                      </button>
+                    </div>
+                  {% else %}
+                    <form class="favorite_form save_button" action="{% url 'core:favorite' %}" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="food_id" value="{{ food.id }}">
+                      <button type="submit" class="btn btn-outline-dark">
                         <i class="fas fa-save"></i> Sauvegarder
                       </button>
                     </form>
-                  </div>
+                  {% endif %}
                 {% endif %}
               </div>
             {% endfor %}
