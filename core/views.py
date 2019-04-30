@@ -41,7 +41,7 @@ class ResearchView(View):
                 paginator = Paginator(new_queryset, 10)
                 foods = paginator.get_page(page)
                 context_dict = {"queryset": foods}
-                if request.user:
+                if request.user.is_authenticated:
                     foods = request.user.profile.favorite_foods.all()
                     context_dict['favorite_foods'] = foods
 
@@ -80,7 +80,7 @@ class SubstituteView(View):
             foods = paginator.get_page(page)
             context_dict = {"queryset": foods,
                             "research": food}
-            if request.user:
+            if request.user.is_authenticated:
                 foods = request.user.profile.favorite_foods.all()
                 context_dict['favorite_foods'] = foods
             return render(request, self.template_name, context_dict)
@@ -133,8 +133,19 @@ class FavoriteFoodView(View):
     def get(self, request):
         user = request.user
         page = request.GET.get('page')
-        food = user.profile.favorite_foods.all()
-        return render(request, self.template_name)
+        queryset = user.profile.favorite_foods.all()
+
+        if queryset.count() == 0:
+            return render(request, self.template_name)
+        else:
+            new_queryset = []
+            for list in self.chunks(queryset, 3):
+                new_queryset.append(list)
+
+            paginator = Paginator(new_queryset, 10)
+            foods = paginator.get_page(page)
+            context_dict = {"queryset": foods}
+            return render(request, self.template_name, context_dict)
 
     def chunks(self, l, n):
         for i in range(0, len(l), n):

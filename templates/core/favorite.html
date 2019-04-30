@@ -4,30 +4,53 @@
 {% endblock %}
 
 {% block content %}
-  <section id="user_account_section_block_top" class="page-section h-auto">
+  <section id="user_account_section_block_top" class="page-section h-25 first_section">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h1>Mes Aliments</h1>
+        <div class="col-lg-8">
+          <h1 class="section_title text-center">Mes Aliments</h1>
         </div>
       </div>
     </div>
   </section>
 
-  <section>
+  <section class="page-section h-auto">
     <div class="container my-auto">
-      {% for subset in queryset %}
-        <div class="row">
-          {% for food in subset %}
-            <div class="col-lg-4 col-sm-8 mx-auto">
-              <h1>{{ food.name }}</h1>
-              <h2>{{ food.brand }}</h2>
-              <h3>{{ food.nutriscore }}</h3>
-              <a>{{ food.url }}</a>
-            </div>
-          {% endfor %}
+      {% if queryset %}
+        {% for subset in queryset %}
+          <div class="row">
+            {% for food in subset %}
+              <div class="col-lg-4 col-sm-12 justify-content-center">
+                <div class="product_block mx-auto">
+                  <a href="{% url 'core:product' id=food.id %}">
+                    {% if food.nutriscore == 'A' %}
+                      <div class="nutriscore rank rank_a">{{ food.nutriscore }}</div>
+                    {% elif food.nutriscore == 'B' %}
+                      <div class="nutriscore rank rank_b">{{ food.nutriscore }}</div>
+                    {% elif food.nutriscore == 'C' %}
+                      <div class="nutriscore rank rank_c">{{ food.nutriscore }}</div>
+                    {% elif food.nutriscore == 'D' %}
+                      <div class="nutriscore rank rank_d">{{ food.nutriscore }}</div>
+                    {% elif food.nutriscore == 'E' %}
+                      <div class="nutriscore rank rank_e">{{ food.nutriscore }}</div>
+                    {% elif food.nutriscore == 'Z' %}
+                      <div class="nutriscore rank rank_z">?</div>
+                    {% endif %}
+                    <img src="{{ food.image_url }}" alt="food_image" class="food_image">
+                  </a>
+                  <p class="text-center food_title">{{ food.name }} par {{ food.brand }}</p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="row justify-content-center">
+          <div class="col-lg-4">
+            <h2 class="text-center">Aucun aliment enregistré</h2>
+          </div>
         </div>
-      {% endfor %}
+      {% endif %}
     </div>
   </section>
 {% endblock %}

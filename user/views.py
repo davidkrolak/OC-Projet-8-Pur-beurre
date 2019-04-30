@@ -36,7 +36,7 @@ class ConnectionView(LoginView):
 
 
 class DisconnectionView(LogoutView):
-    template_name = 'user/logout.html'
+    template_name = 'core/home.html'
 
 
 class AccountView(View):

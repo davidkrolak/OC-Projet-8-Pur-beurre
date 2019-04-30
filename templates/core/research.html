@@ -21,34 +21,34 @@
         {% for subset in queryset %}
           <div class="row">
             {% for food in subset %}
-              <div class="col-lg-4 col-sm-8 mx-auto">
-                <a href="{% url 'core:substitute' id=food.id %}">
-                  <div class="img_and_nutriscore">
+              <div class="col-lg-4 col-sm-12 justify-content-center">
+                <div class="product_block mx-auto">
+                  <a href="{% url 'core:substitute' id=food.id %}">
                     {% if food.nutriscore == 'A' %}
-                      <div class="nutriscore rank_a">{{ food.nutriscore }}</div>
+                      <div class="nutriscore rank rank_a">{{ food.nutriscore }}</div>
                     {% elif food.nutriscore == 'B' %}
-                      <div class="nutriscore rank_b">{{ food.nutriscore }}</div>
+                      <div class="nutriscore rank rank_b">{{ food.nutriscore }}</div>
                     {% elif food.nutriscore == 'C' %}
-                      <div class="nutriscore rank_c">{{ food.nutriscore }}</div>
+                      <div class="nutriscore rank rank_c">{{ food.nutriscore }}</div>
                     {% elif food.nutriscore == 'D' %}
-                      <div class="nutriscore rank_d">{{ food.nutriscore }}</div>
+                      <div class="nutriscore rank rank_d">{{ food.nutriscore }}</div>
                     {% elif food.nutriscore == 'E' %}
-                      <div class="nutriscore rank_e">{{ food.nutriscore }}</div>
+                      <div class="nutriscore rank rank_e">{{ food.nutriscore }}</div>
                     {% elif food.nutriscore == 'Z' %}
-                      <div class="nutriscore rank_z">?</div>
+                      <div class="nutriscore rank rank_z">?</div>
                     {% endif %}
                     <img src="{{ food.image_url }}" alt="food_image" class="food_image">
-                  </div>
-                </a>
-                <p class="text-center food_title">{{ food.name }} par {{ food.brand }}</p>
-                {% if user.is_authenticated %}
-                  {% if food in favorite_foods %}
-                    <div>
-                      <button class="btn btn-success active save_button" disabled>
-                        <i class="fas fa-check"></i> Sauvegardé
-                      </button>
-                    </div>
-                  {% else %}
+                  </a>
+                  <p class="text-center food_title">{{ food.name }} par {{ food.brand }}</p>
+                  {% if user.is_authenticated %}
+                    <div class="save_button_placeholder"></div>
+                    {% if food in favorite_foods %}
+                      <div>
+                        <button class="btn btn-success active save_button" disabled>
+                          <i class="fas fa-check"></i> Sauvegardé
+                        </button>
+                      </div>
+                    {% else %}
                       <form class="favorite_form save_button" action="{% url 'core:favorite' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="food_id" value="{{ food.id }}">
@@ -56,8 +56,9 @@
                           <i class="fas fa-save"></i> Sauvegarder
                         </button>
                       </form>
+                    {% endif %}
                   {% endif %}
-                {% endif %}
+                </div>
               </div>
             {% endfor %}
           </div>
@@ -73,17 +74,17 @@
     <div class="pagination row justify-content-center my-5">
     <span class="step-links">
         {% if queryset.has_previous %}
-          <a href="?food={{ request.GET.food }}&page=1">&laquo; first</a>
-          <a href="?food={{ request.GET.food }}&page={{ queryset.previous_page_number }}">previous</a>
+          <a href="?food={{ request.GET.food }}&page=1">&laquo; Début</a>
+          <a href="?food={{ request.GET.food }}&page={{ queryset.previous_page_number }}">précedente</a>
         {% endif %}
 
       <span class="current">
-            Page {{ queryset.number }} of {{ queryset.paginator.num_pages }}.
+            Page {{ queryset.number }} de {{ queryset.paginator.num_pages }}.
         </span>
 
       {% if queryset.has_next %}
-        <a href="?food={{ request.GET.food }}&page={{ queryset.next_page_number }}">next</a>
-        <a href="?food={{ request.GET.food }}&page={{ queryset.paginator.num_pages }}">last &raquo;</a>
+        <a href="?food={{ request.GET.food }}&page={{ queryset.next_page_number }}">suivante</a>
+        <a href="?food={{ request.GET.food }}&page={{ queryset.paginator.num_pages }}">Fin &raquo;</a>
       {% endif %}
     </span>
     </div>

@@ -59,7 +59,7 @@ html, body {
 
 /*Home page*/
 #story_section {
-   background-color: #e8a75d;
+    background-color: #e8a75d;
 }
 
 /*General classes*/
@@ -81,7 +81,9 @@ html, body {
     background-color: #e8a75d;
 }
 
-.img_and_nutriscore {
+.product_block {
+    width: 300px;
+    height: auto;
 }
 
 .nutriscore {
@@ -93,79 +95,76 @@ html, body {
     border-radius: 50%;
 }
 
-.rank_a {
-    background-color: #3d8954;
+.rank {
     text-align: center;
-    color: white;
     padding-top: 0.5rem;
     padding-right: 0.1rem;
+}
+
+.rank_a {
+    background-color: #3d8954;
+    color: white;
 }
 
 .rank_b {
     background-color: #8ec05b;
-    text-align: center;
     color: white;
-    padding-top: 0.5rem;
-    padding-right: 0.1rem;
 }
 
 .rank_c {
     background-color: #f7cc47;
-    text-align: center;
     color: white;
-    padding-top: 0.5rem;
-    padding-right: 0.1rem;
 }
 
 .rank_d {
     background-color: #e78b3d;
-    text-align: center;
     color: white;
-    padding-top: 0.5rem;
-    padding-right: 0.1rem;
 }
 
 .rank_e {
     background-color: #de5734;
-    text-align: center;
     color: white;
-    padding-top: 0.5rem;
-    padding-right: 0.1rem;
 }
 
 .rank_z {
     background-color: #86ebe6;
-    text-align: center;
     color: white;
-    padding-top: 0.5rem;
-    padding-right: 0.1rem;
 }
 
 .food_image {
     display: block;
-    height: 20rem;
-    width: 20rem;
+    height: 400px;
+    width: 300px;
     margin-left: auto;
     margin-right: auto;
     border-radius: 1rem;
 }
 
-.food_image:hover {
-    color: white;
-}
-
 .food_title {
-    height: 48px;
 }
 
 .save_button {
-    position: relative;
+    position: absolute;
+    bottom: 0;
+}
+
+.save_button_placeholder {
+    height: 38px;
 }
 
 .food_section {
     background-position: center;
     background-size: auto;
     background-color: #345a61;
+}
+
+.portrait {
+    display: block;
+    height: 300px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
 }
 
 .footer {
