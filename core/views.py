@@ -124,7 +124,7 @@ class FavoriteFoodView(View):
         food_id = request.POST['food_id']
         user = request.user
         if user.profile.favorite_foods.filter(id=food_id).count() == 1:
-            return JsonResponse({})
+            return JsonResponse({'status': 'allready_faved'})
         elif user.profile.favorite_foods.filter(id=food_id).count() == 0:
             user.profile.favorite_foods.add(food_id)
             return JsonResponse({'status': 'ok'})
@@ -157,3 +157,9 @@ class LegalNoticeView(View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+
+class ContactView(View):
+
+    def get(self, request):
+        return redirect('core:home')

@@ -18,5 +18,11 @@ urlpatterns = [
          name='product'),
     path('favorite',
          FavoriteFoodView.as_view(),
-         name='favorite')
+         name='favorite'),
+    path('legal-notice',
+         LegalNoticeView.as_view(),
+         name='legal_notice'),
+    path('contact',
+         ContactView.as_view(),
+         name='contact')
 ]

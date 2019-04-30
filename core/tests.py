@@ -1,7 +1,6 @@
 from unittest.mock import MagicMock, patch
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User
 
 from .management.commands import populatedb
 from .models import *
@@ -157,10 +156,34 @@ class FavoriteFoodViewTests(TestCase):
 
     def test_post_request_food_user_not_logged_in(self):
         form_data = {"food_id": self.food.id}
-        response = self.client.post(reverse('core:favorite'), form_data)
+        self.client.post(reverse('core:favorite'), form_data)
 
         self.assertEqual(self.user.profile.favorite_foods.count(), 0)
         self.assertEqual(self.user.profile.favorite_foods.first(), None)
+
+
+class LegalNoticeViewTests(TestCase):
+    """"""
+
+    def test_get_request_correct_html(self):
+        response = self.client.get(reverse('core:legal_notice'))
+        html = response.content.decode('utf8')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(html.startswith('<!DOCTYPE html>'))
+        self.assertTrue(html.endswith('</html>'))
+        self.assertInHTML(
+                '''<h1 class="section_title text-center">Mentions Légales</h1>''',
+                html)
+
+
+class ContactViewTests(TestCase):
+    """"""
+
+    def test_get_request_correct_html(self):
+        response = self.client.get(reverse('core:contact'))
+
+        self.assertEqual(response.status_code, 302)
 
 
 class PopulateDbTests(TestCase):

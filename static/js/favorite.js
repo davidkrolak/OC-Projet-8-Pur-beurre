@@ -9,6 +9,8 @@ $(document).ready(function () {
                 x = "<div><button class='btn btn-success active save_button' disabled><i class='fas fa-check'></i> Sauvegardé</button></div>";
                 form.after(x);
                 form.remove();
+            } else if (response.status == 'allready_faved') {
+                //pass
             }
         });
     })
