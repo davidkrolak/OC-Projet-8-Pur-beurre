@@ -36,7 +36,9 @@ class ConnectionView(LoginView):
 
 
 class DisconnectionView(LogoutView):
-    template_name = 'core/home.html'
+
+    def get(self, request, *args, **kwargs):
+        return redirect('core:home')
 
 
 class AccountView(View):
