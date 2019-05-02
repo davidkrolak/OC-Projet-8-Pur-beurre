@@ -7,11 +7,13 @@ verify_ssl = true
 
 [packages]
 django = "*"
-psycopg2-binary = "*"
 selenium = "*"
 coverage = "*"
 requests = "*"
 gunicorn = "*"
+django-heroku = "*"
+psycopg2 = "==2.7"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"
