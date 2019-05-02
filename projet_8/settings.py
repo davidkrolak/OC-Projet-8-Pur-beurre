@@ -44,9 +44,6 @@ MIDDLEWARE = [
 ]
 
 if os.environ.get('ENV') == 'PRODUCTION':
-    # ...
-    # Simplified static file serving.
-    # https://warehouse.python.org/project/whitenoise/
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'projet_8.urls'
@@ -79,9 +76,9 @@ WSGI_APPLICATION = 'projet_8.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5455',
+        'NAME': 'pur_beurre',
+        'HOST': '',
+        'PORT': '5432',
         'USER': os.environ.get('DATABASE_USER'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
     }
@@ -130,6 +127,7 @@ if os.environ.get('ENV') == 'PRODUCTION':
     # Extra places for collectstatic to find static files.
     STATICFILES_DIRS = (
         os.path.join(PROJECT_ROOT, 'static'),
+        STATIC_DIR
     )
 
 STATIC_URL = '/static/'
