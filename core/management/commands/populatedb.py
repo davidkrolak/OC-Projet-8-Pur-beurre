@@ -18,21 +18,11 @@ class Command(BaseCommand):
         self.stdout.write("Saving categories into database")
         self.save_categories_into_db(categories_request_dict)
 
-        cats_amount = 0
-        while cats_amount < 5:
-            try:
-                cats_amount = int(input(
-                        "How many categories do you want to add into "
-                        "the db ? (5 or higher)"
-                ))
-            except TypeError:
-                self.stdout.write("Wrong input.")
+        cats_amount = 10
 
         categories = Categories.objects.all()
 
         for category in categories:
-            if cats_amount == 0:
-                break
             self.stdout.write("Requesting items from {0}".format(
                     category.name))
             food_request_dict = self.api_food_request(category)
@@ -50,7 +40,7 @@ class Command(BaseCommand):
         return request.json()
 
     def save_categories_into_db(self, request_dict):
-        categories_list = request_dict["tags"]
+        categories_list = request_dict["tags"][:10]
         for category in categories_list:
             name = self.string_cleaner(category["name"])
             url = category["url"]
@@ -86,7 +76,10 @@ class Command(BaseCommand):
 
         for food in food_list:
             food_name = self.string_cleaner(food["product_name"])
-            food_brand = self.string_cleaner(food["brands"].split(',')[0])
+            try:
+                food_brand = self.string_cleaner(food["brands"].split(',')[0])
+            except KeyError:
+                pass
             try:
                 food_nutriscore = self.string_cleaner(food["nutrition_grades"])
             except KeyError:

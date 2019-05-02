@@ -76,7 +76,7 @@ class DisconnectionViewTest(TestCase):
 
     def test_user_logout(self):
         response = self.client.get(reverse('user:logout'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertEqual(response.wsgi_request.user.username, '')
 
 
@@ -97,7 +97,8 @@ class AccountViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.wsgi_request.user.username, 'test')
         self.assertInHTML('<h2 class="text-black-50">test@mail.com</h2>', html)
-        self.assertInHTML('<h2 class="text-white">test_first_name</h2>', html)
+        self.assertInHTML('<h2 class="section_title '
+                          'text-center">test_first_name</h2>', html)
 
     def test_redirection_if_not_logged_in(self):
         response = self.client.get(reverse('user:account'))
