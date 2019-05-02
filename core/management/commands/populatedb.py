@@ -18,7 +18,7 @@ class Command(BaseCommand):
         self.stdout.write("Saving categories into database")
         self.save_categories_into_db(categories_request_dict)
 
-        cats_amount = 10
+        cats_amount = 3
 
         categories = Categories.objects.all()
 
@@ -40,7 +40,7 @@ class Command(BaseCommand):
         return request.json()
 
     def save_categories_into_db(self, request_dict):
-        categories_list = request_dict["tags"][:10]
+        categories_list = request_dict["tags"][:3]
         for category in categories_list:
             name = self.string_cleaner(category["name"])
             url = category["url"]
