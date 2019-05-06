@@ -26,7 +26,7 @@ class SignUpView(View):
             login(request, user)
             return redirect('user:account')
         elif not form.is_valid():
-            form = self.form()
+            form = self.form(request.POST)
             return render(request, self.template_name, {'form': form})
 
 

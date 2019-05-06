@@ -20,6 +20,9 @@
                 <small>{{ field.help_text }}</small>
               </div>
             {% endif %}
+            {% for error in field.errors %}
+              <p style="color: red">{{ error }}</p>
+            {% endfor %}
           </div>
         {% endfor %}
         <button class="btn btn-primary" type="submit">Créer mon compte</button>
