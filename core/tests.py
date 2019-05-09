@@ -7,9 +7,10 @@ from .models import *
 
 
 class HomeViewTests(TestCase):
-    """"""
 
     def test_get_request_correct_html(self):
+        """Verify we got a good status code and the template is displayed as
+        intented"""
         response = self.client.get(reverse('core:home'))
         html = response.content.decode('utf8')
 
@@ -21,7 +22,6 @@ class HomeViewTests(TestCase):
 
 
 class ResearchViewTests(TestCase):
-    """"""
 
     def setUp(self):
         Food.objects.create(name='testname',
@@ -31,6 +31,8 @@ class ResearchViewTests(TestCase):
                             image_url='http://testimageurl.com')
 
     def test_get_request_got_results(self):
+        """Verify the get request return the correct status code and html if
+        the research got results"""
         form_data = {'food': 'test'}
         response = self.client.get(reverse('core:research'), form_data)
         html = response.content.decode('utf8')
@@ -43,6 +45,8 @@ class ResearchViewTests(TestCase):
         class="food_image">''', html)
 
     def test_get_request_no_result(self):
+        """Verify the get request return the correct status code and html if
+        the research got no results"""
         form_data = {'food': 'iamnotaresult'}
         response = self.client.get(reverse('core:research'), form_data)
         html = response.content.decode('utf8')
@@ -54,7 +58,6 @@ class ResearchViewTests(TestCase):
 
 
 class SubstituteViewTests(TestCase):
-    """"""
 
     def setUp(self):
         c = Categories.objects.create(name='testcat',
@@ -77,6 +80,8 @@ class SubstituteViewTests(TestCase):
         f2.categories.add(c)
 
     def test_get_request_got_results(self):
+        """Verify the get request return the correct status code and html if
+        the research got results"""
         response = self.client.get(reverse('core:substitute', args=[1]))
         html = response.content.decode('utf8')
 
@@ -88,17 +93,20 @@ class SubstituteViewTests(TestCase):
         class="food_image">''', html)
 
     def test_get_request_no_results(self):
+        """Verify the get request return the correct status code and html if
+        the research got no results"""
         response = self.client.get(reverse('core:substitute', args=[2]))
         html = response.content.decode('utf8')
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(html.startswith('<!DOCTYPE html>'))
         self.assertTrue(html.endswith('</html>'))
-        self.assertInHTML('<h1>Pas de résultats !</h1>', html)
+        self.assertInHTML(
+                '<h1>Pas de substituts connus pour cet aliment !</h1>',
+                html)
 
 
 class ProductViewTests(TestCase):
-    """"""
 
     def setUp(self):
         Food.objects.create(name='testname',
@@ -108,6 +116,7 @@ class ProductViewTests(TestCase):
                             image_url='http://testimageurl.com')
 
     def test_get_request_correct_html(self):
+        """Verify the get request return the correct status code and html"""
         id = Food.objects.first().id
         response = self.client.get(reverse('core:product', args=[id]))
         html = response.content.decode('utf8')
@@ -122,7 +131,6 @@ class ProductViewTests(TestCase):
 
 
 class FavoriteFoodViewTests(TestCase):
-    """"""
 
     def setUp(self):
         self.user = User.objects.create_user(username='test',
@@ -136,6 +144,7 @@ class FavoriteFoodViewTests(TestCase):
                                         image_url='http://testimageurl.com')
 
     def test_post_request_food_saved_user_logged_in(self):
+        """Verify that food is properly saved when a user is logged in"""
         self.client.login(username='test', password='test1234')
         form_data = {"food_id": self.food.id}
         self.client.post(reverse('core:favorite'), form_data)
@@ -144,6 +153,7 @@ class FavoriteFoodViewTests(TestCase):
         self.assertEqual(self.user.profile.favorite_foods.first(), self.food)
 
     def test_post_request_try_to_fav_an_allready_faved_food(self):
+        """Verify that food is not saved when it is already saved"""
         self.client.login(username='test', password='test1234')
         self.user.profile.favorite_foods.add(self.food)
 
@@ -155,6 +165,7 @@ class FavoriteFoodViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post_request_food_user_not_logged_in(self):
+        """Verify that food is not saved when a user is not logged in"""
         form_data = {"food_id": self.food.id}
         self.client.post(reverse('core:favorite'), form_data)
 
@@ -163,9 +174,10 @@ class FavoriteFoodViewTests(TestCase):
 
 
 class LegalNoticeViewTests(TestCase):
-    """"""
 
     def test_get_request_correct_html(self):
+        """Verify the get request return the correct status code and html if
+        the research got results"""
         response = self.client.get(reverse('core:legal_notice'))
         html = response.content.decode('utf8')
 
@@ -178,16 +190,17 @@ class LegalNoticeViewTests(TestCase):
 
 
 class ContactViewTests(TestCase):
-    """"""
 
     def test_get_request_correct_html(self):
+        """Verify the redirection"""
         response = self.client.get(reverse('core:contact'))
 
         self.assertEqual(response.status_code, 302)
 
 
 class PopulateDbTests(TestCase):
-    """"""
+    """Class test for the populate db django command, test the inner
+    methods of this command"""
 
     def setUp(self) -> None:
         self.command = populatedb.Command()

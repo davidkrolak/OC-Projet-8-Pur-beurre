@@ -5,7 +5,6 @@ from .forms import SignUpForm, LoginForm
 
 
 class SignupViewTest(TestCase):
-    """"""
 
     def setUp(self):
         self.form_data = {'username': 'test_form',
@@ -16,6 +15,7 @@ class SignupViewTest(TestCase):
                           'password2': 'iamnotsecure12'}
 
     def test_get_request_correct_html(self):
+        """Verify the get request return the correct status code and html"""
         response = self.client.get(reverse('user:signup'))
         html = response.content.decode('utf8')
 
@@ -25,12 +25,14 @@ class SignupViewTest(TestCase):
         self.assertTrue(html.endswith('</html>'))
 
     def test_post_request_redirection_correct_form(self):
+        """Verify the correct redirection after a signup"""
         response = self.client.post(reverse('user:signup'), self.form_data)
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/user/account/')
 
     def test_post_request_redirection_wrong_form(self):
+        """Verify the correct redirection after a wrong form signup"""
         form_data = self.form_data
         form_data['password2'] = 'iamwrong'
         response = self.client.post(reverse('user:signup'), form_data)
@@ -40,7 +42,6 @@ class SignupViewTest(TestCase):
 
 
 class ConnectionViewTest(TestCase):
-    """"""
 
     def setUp(self):
         User.objects.create_user(username='test',
@@ -51,11 +52,14 @@ class ConnectionViewTest(TestCase):
                             'password': 'test1234'}
 
     def test_user_login(self):
+        """Verify redirection after a correct login and if the user is
+        correctly logged in """
         response = self.client.post(reverse('user:login'), self.credentials)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.wsgi_request.user.username, 'test')
 
     def test_login_wrong_credentials(self):
+        """Verify if user is not logged in after a wrong input"""
         credentials = self.credentials
         credentials['password'] = 'iamwrong'
         response = self.client.post(reverse('user:login'), credentials)
@@ -65,7 +69,6 @@ class ConnectionViewTest(TestCase):
 
 
 class DisconnectionViewTest(TestCase):
-    """"""
 
     def setUp(self):
         User.objects.create_user(username='test',
@@ -75,13 +78,13 @@ class DisconnectionViewTest(TestCase):
         self.client.login(username='test', password='test1234')
 
     def test_user_logout(self):
+        "Verify if user is correctly logged out and redirected"
         response = self.client.get(reverse('user:logout'))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.wsgi_request.user.username, '')
 
 
 class AccountViewTest(TestCase):
-    """"""
 
     def setUp(self):
         User.objects.create_user(username='test',
@@ -90,6 +93,7 @@ class AccountViewTest(TestCase):
                                  first_name='test_first_name')
 
     def test_display_user_info(self):
+        """Verify if it display the correct user info"""
         self.client.login(username='test', password='test1234')
         response = self.client.get(reverse('user:account'))
         html = response.content.decode('utf8')

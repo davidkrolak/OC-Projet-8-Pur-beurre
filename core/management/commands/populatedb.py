@@ -8,11 +8,11 @@ from core.forms import CategoriesForm
 
 
 class Command(BaseCommand):
-    """"""
+    """Requests data to the OpenFoodFacts API to fill the local database
+    with data (food, food categories)"""
     help = "populate the database via OpenFoodFacts API"
 
     def handle(self, *args, **options):
-        """"""
         self.stdout.write("Requesting categories to O.F.F.")
         categories_request_dict = self.api_categories_request()
         self.stdout.write("Saving categories into database")

@@ -1,7 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.views import View
 from django.http import JsonResponse
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
@@ -11,6 +10,8 @@ from .forms import FoodRequestForm
 
 
 class HomeView(View):
+    """Return the home template to the user and pass the
+    food request form for the research bar in the template"""
     form = FoodRequestForm
     template_name = "core/home.html"
 
@@ -21,6 +22,8 @@ class HomeView(View):
 
 
 class ResearchView(View):
+    """Return results from a food research in the db with a 2d list format,
+    or no context dict if there is no results"""
     form = FoodRequestForm
     template_name = "core/research.html"
 
@@ -47,12 +50,16 @@ class ResearchView(View):
 
                 return render(request, self.template_name, context_dict)
 
-    def chunks(self, l, n):
+    @staticmethod
+    def chunks(l, n):
         for i in range(0, len(l), n):
             yield l[i:i + n]
 
 
 class SubstituteView(View):
+    """Return a 2d list filled with food substitute by doing a db research
+    where all the element with a lower nutrition grade are filtered and all
+    the elements who doesn't share 5 categories or more with our research"""
     template_name = 'core/substitute.html'
 
     def get(self, request, id):
@@ -85,7 +92,8 @@ class SubstituteView(View):
                 context_dict['favorite_foods'] = foods
             return render(request, self.template_name, context_dict)
 
-    def nutriscore_list(self, nutriscore):
+    @staticmethod
+    def nutriscore_list(nutriscore):
         if nutriscore == 'A':
             return ['A']
         elif nutriscore == 'B':
@@ -99,12 +107,14 @@ class SubstituteView(View):
         elif nutriscore == 'Z':
             return ['A', 'B', 'C', 'D', 'E']
 
-    def chunks(self, l, n):
+    @staticmethod
+    def chunks(l, n):
         for i in range(0, len(l), n):
             yield l[i:i + n]
 
 
 class ProductView(View):
+    """Return the template for a single product"""
     template_name = 'core/product.html'
 
     def get(self, request, id):
@@ -116,7 +126,8 @@ class ProductView(View):
 
 
 class FavoriteFoodView(View):
-    """"""
+    """Return a template filled with all the foods a user saved.
+    Only works if user is logged in"""
     template_name = 'core/favorite.html'
 
     @method_decorator(login_required)
@@ -147,12 +158,14 @@ class FavoriteFoodView(View):
             context_dict = {"queryset": foods}
             return render(request, self.template_name, context_dict)
 
-    def chunks(self, l, n):
+    @staticmethod
+    def chunks(l, n):
         for i in range(0, len(l), n):
             yield l[i:i + n]
 
 
 class LegalNoticeView(View):
+    """Return the legal notice template"""
     template_name = 'core/legal_notice.html'
 
     def get(self, request):
@@ -160,6 +173,7 @@ class LegalNoticeView(View):
 
 
 class ContactView(View):
+    """Redirect the user to the contact me section in the home page"""
 
     def get(self, request):
-        return redirect('core:home')
+        return redirect(reverse('core:home') + '#contact')

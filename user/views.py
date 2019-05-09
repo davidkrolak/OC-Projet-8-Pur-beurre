@@ -13,10 +13,13 @@ class SignUpView(View):
     template_name = 'user/signup.html'
 
     def get(self, request):
+        """Return the signup template"""
         form = self.form()
         return render(request, self.template_name, {'form': form})
 
     def post(self, request):
+        """Process the signup form, redirect and log the user if it is
+        valid, return the signup template otherwise"""
         form = self.form(request.POST)
         if form.is_valid():
             form.save()
