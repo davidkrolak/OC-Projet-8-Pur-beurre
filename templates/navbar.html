@@ -20,19 +20,19 @@
         {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="{% url 'user:account' %}">
-              {% include 'svg/user.svg' %}
+              {% include 'svg/user.svg' %} <div class="d-lg-none ml-2 d-inline">Mon compte</div>
             </a>
           </li>
 
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="{% url 'core:favorite' %}">
-              {% include 'svg/carrot.svg' %}
+              {% include 'svg/carrot.svg' %} <div class="d-lg-none ml-2 d-inline">Mes aliments sauvegardés</div>
             </a>
           </li>
 
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="{% url 'user:logout' %}">
-              {% include 'svg/sign-out.svg' %}
+              {% include 'svg/sign-out.svg' %} <div class="d-lg-none ml-2 d-inline">Se déconnecter</div>
             </a>
           </li>
 
@@ -40,7 +40,7 @@
 
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="{% url 'user:login' %}">
-              {% include 'svg/sign-in.svg' %}
+              {% include 'svg/sign-in.svg' %} <div class="d-lg-none ml-2 d-inline">Se connecter</div>
             </a>
           </li>
 
